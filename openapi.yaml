@@ -3,17 +3,6 @@ paths:
   /pets:
     post:
       operationId: create
-      x-speakeasy-retries:
-        strategy: backoff
-        backoff:
-          initialInterval: 1000
-          maxInterval: 80000
-          maxElapsedTime: 3600000
-          exponent: 1.5
-        statusCodes:
-          - 5XX
-        retryConnectionErrors: true
-      summary: Create pet
       parameters: []
       requestBody:
         required: true
@@ -43,12 +32,22 @@ paths:
           description: Bad Request
         '403':
           description: Forbidden
+      summary: Create pet
       tags:
-        - pets
+        - Pets
+      x-speakeasy-retries:
+        strategy: backoff
+        backoff:
+          initialInterval: 1000
+          maxInterval: 80000
+          maxElapsedTime: 3600000
+          exponent: 1.5
+        statusCodes:
+          - 5XX
+        retryConnectionErrors: true
   /pets/cats/{id}:
     get:
       operationId: findOneCat
-      summary: Get cat
       parameters:
         - name: id
           required: true
@@ -64,12 +63,13 @@ paths:
                 $ref: '#/components/schemas/Cat'
         '400':
           description: Bad Request
+      summary: Get cat
       tags:
+        - Pets
         - cats
   /pets/dogs/{id}:
     get:
       operationId: findOneDog
-      summary: Get dog
       parameters:
         - name: id
           required: true
@@ -85,7 +85,9 @@ paths:
                 $ref: '#/components/schemas/Dog'
         '400':
           description: Bad Request
+      summary: Get dog
       tags:
+        - Pets
         - dogs
 info:
   title: Pet API
@@ -100,7 +102,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 tags:
-  - name: pets
+  - name: Pets
     description: Pets operations
     externalDocs:
       url: https://example.com/api

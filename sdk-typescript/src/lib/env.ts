@@ -11,9 +11,8 @@ export interface Env {
 }
 
 export const envSchema: z.ZodType<Env, z.ZodTypeDef, unknown> = z.object({
-  SDK_DEBUG: z.coerce.boolean(),
-})
-  .partial();
+  SDK_DEBUG: z.coerce.boolean().optional(),
+});
 
 let envMemo: Env | undefined = undefined;
 /**

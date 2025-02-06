@@ -1,0 +1,191 @@
+openapi: 3.0.0
+paths:
+    /pets:
+        post:
+            operationId: create
+            x-speakeasy-retries:
+                strategy: backoff
+                backoff:
+                    initialInterval: 1000
+                    maxInterval: 80000
+                    maxElapsedTime: 3600000
+                    exponent: 1.5
+                statusCodes:
+                    - 5XX
+                retryConnectionErrors: true
+            summary: Create pet
+            parameters: []
+            requestBody:
+                required: true
+                description: Create a pet cat or dog
+                content:
+                    application/json:
+                        schema:
+                            oneOf:
+                                - $ref: '#/components/schemas/Cat'
+                                - $ref: '#/components/schemas/Dog'
+            responses:
+                '200':
+                    description: ''
+                    content:
+                        application/json:
+                            schema:
+                                oneOf:
+                                    - $ref: '#/components/schemas/Cat'
+                                    - $ref: '#/components/schemas/Dog'
+                '201':
+                    description: ''
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                '400':
+                    description: Bad Request
+                '403':
+                    description: Forbidden
+            tags:
+                - pets
+    /pets/cats/{id}:
+        get:
+            operationId: findOneCat
+            summary: Get cat
+            parameters:
+                - name: id
+                  required: true
+                  in: path
+                  schema:
+                    type: string
+            responses:
+                '200':
+                    description: The found record
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Cat'
+                '400':
+                    description: Bad Request
+            tags:
+                - cats
+    /pets/dogs/{id}:
+        get:
+            operationId: findOneDog
+            summary: Get dog
+            parameters:
+                - name: id
+                  required: true
+                  in: path
+                  schema:
+                    type: string
+            responses:
+                '200':
+                    description: The found record
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Dog'
+                '400':
+                    description: Bad Request
+            tags:
+                - dogs
+info:
+    title: Pet API
+    description: Create a cat or dog record and view pets by id
+    version: '1.0'
+    contact:
+        name: Speakeasy support
+        url: http://www.example.com/support
+        email: support@example.com
+    termsOfService: http://example.com/terms/
+    license:
+        name: Apache 2.0
+        url: https://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+    - name: pets
+      description: Pets operations
+      externalDocs:
+        url: https://example.com/api
+        description: Operations API endpoint
+    - name: cats
+      description: ''
+    - name: dogs
+      description: ''
+servers:
+    - url: http://localhost:3000/
+      description: Development server
+components:
+    schemas:
+        Cat:
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: The type of pet
+                    example: cat
+                name:
+                    type: string
+                    description: The name of the cat
+                    example: Panama
+                age:
+                    type: number
+                    description: The age of the cat
+                    example: 1
+                breed:
+                    type: string
+                    description: The breed of the cat
+                    example: British Short Hair
+                environment:
+                    type: string
+                    description: Living environment of the cat
+                    example: indoor
+                    enum:
+                        - indoor
+                        - outdoor
+            required:
+                - type
+                - name
+                - age
+                - breed
+                - environment
+        Dog:
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: The type of pet
+                    example: dog
+                name:
+                    type: string
+                    description: The name of the dog
+                    example: Fluffy
+                age:
+                    type: number
+                    description: The age of the dog
+                    example: 4
+                breed:
+                    type: string
+                    description: The breed of the dog
+                    example: Alaskan Malamute
+                size:
+                    type: string
+                    description: The Size of the dog'
+                    example: medium
+                    enum:
+                        - small
+                        - medium
+                        - large
+            required:
+                - type
+                - name
+                - age
+                - breed
+                - size
+x-speakeasy-retries:
+    strategy: backoff
+    backoff:
+        initialInterval: 500
+        maxInterval: 60000
+        maxElapsedTime: 3600000
+        exponent: 1.5
+    statusCodes:
+        - 5XX
+    retryConnectionErrors: true

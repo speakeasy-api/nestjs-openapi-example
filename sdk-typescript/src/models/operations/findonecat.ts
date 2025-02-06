@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type FindOneCatRequest = {
   id: string;
@@ -42,4 +45,22 @@ export namespace FindOneCatRequest$ {
   export const outboundSchema = FindOneCatRequest$outboundSchema;
   /** @deprecated use `FindOneCatRequest$Outbound` instead. */
   export type Outbound = FindOneCatRequest$Outbound;
+}
+
+export function findOneCatRequestToJSON(
+  findOneCatRequest: FindOneCatRequest,
+): string {
+  return JSON.stringify(
+    FindOneCatRequest$outboundSchema.parse(findOneCatRequest),
+  );
+}
+
+export function findOneCatRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<FindOneCatRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => FindOneCatRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'FindOneCatRequest' from JSON`,
+  );
 }

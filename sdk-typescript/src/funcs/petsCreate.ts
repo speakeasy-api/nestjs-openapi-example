@@ -5,9 +5,11 @@
 import { SDKCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { pathToFunc } from "../lib/url.js";
+import { APIError } from "../models/errors/apierror.js";
 import {
   ConnectionError,
   InvalidRequestError,
@@ -15,7 +17,6 @@ import {
   RequestTimeoutError,
   UnexpectedClientError,
 } from "../models/errors/httpclienterrors.js";
-import { SDKError } from "../models/errors/sdkerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
 import * as operations from "../models/operations/index.js";
 import { Result } from "../types/fp.js";
@@ -30,7 +31,7 @@ export async function petsCreate(
 ): Promise<
   Result<
     operations.CreateResponse,
-    | SDKError
+    | APIError
     | SDKValidationError
     | UnexpectedClientError
     | InvalidRequestError
@@ -39,10 +40,8 @@ export async function petsCreate(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => operations.CreateRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
@@ -54,19 +53,37 @@ export async function petsCreate(
 
   const path = pathToFunc("/pets")();
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
-  });
+  }));
 
   const context = {
     operationID: "create",
     oAuth2Scopes: [],
+
+    resolvedSecurity: null,
+
     securitySource: null,
+    retryConfig: options?.retries
+      || client._options.retryConfig
+      || {
+        strategy: "backoff",
+        backoff: {
+          initialInterval: 1000,
+          maxInterval: 80000,
+          exponent: 1.5,
+          maxElapsedTime: 3600000,
+        },
+        retryConnectionErrors: true,
+      }
+      || { strategy: "none" },
+    retryCodes: options?.retryCodes || ["5XX"],
   };
 
   const requestRes = client._createRequest(context, {
     method: "POST",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     body: body,
@@ -80,19 +97,8 @@ export async function petsCreate(
   const doResult = await client._do(req, {
     context,
     errorCodes: ["400", "403", "4XX", "5XX"],
-    retryConfig: options?.retries
-      || client._options.retryConfig
-      || {
-        strategy: "backoff",
-        backoff: {
-          initialInterval: 1000,
-          maxInterval: 80000,
-          exponent: 1.5,
-          maxElapsedTime: 3600000,
-        },
-        retryConnectionErrors: true,
-      },
-    retryCodes: options?.retryCodes || ["5XX"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
     return doResult;
@@ -101,7 +107,7 @@ export async function petsCreate(
 
   const [result] = await M.match<
     operations.CreateResponse,
-    | SDKError
+    | APIError
     | SDKValidationError
     | UnexpectedClientError
     | InvalidRequestError
@@ -111,7 +117,8 @@ export async function petsCreate(
   >(
     M.json(200, operations.CreateResponse$inboundSchema),
     M.json(201, operations.CreateResponse$inboundSchema),
-    M.fail([400, 403, "4XX", "5XX"]),
+    M.fail([400, 403, "4XX"]),
+    M.fail("5XX"),
   )(response);
   if (!result.ok) {
     return result;

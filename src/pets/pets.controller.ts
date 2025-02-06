@@ -22,7 +22,6 @@ export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 
   @Post()
-  @ApiTags('pets')
   @ApiOperation({ summary: 'Create pet' })
   @ApiBody({
     schema: {
@@ -42,13 +41,12 @@ export class PetsController {
     retryConnectionErrors: true,
   })
   @ApiOkResponse({
-    status: 201,
     schema: {
       oneOf: [{ $ref: getSchemaPath(Cat) }, { $ref: getSchemaPath(Dog) }],
     },
   })
-  @ApiForbiddenResponse({ status: 403, description: 'Forbidden' })
-  @ApiBadRequestResponse({ status: 400, description: 'Bad Request' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
   @UsePipes(CreatePetValidationPipe)
   async create(@Body() dto: CreateCatDto | CreateDogDto): Promise<Cat | Dog> {
     return this.petsService.create(dto);
@@ -62,7 +60,7 @@ export class PetsController {
     description: 'The found record',
     type: Cat,
   })
-  @ApiBadRequestResponse({ status: 400, description: 'Bad Request' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
   findOneCat(@Param('id') id: string): Cat {
     return this.petsService.findOneCat(+id);
   }
@@ -75,7 +73,7 @@ export class PetsController {
     description: 'The found record',
     type: Dog,
   })
-  @ApiBadRequestResponse({ status: 400, description: 'Bad Request' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
   findOneDog(@Param('id') id: string): Dog {
     return this.petsService.findOneDog(+id);
   }

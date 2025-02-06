@@ -3,7 +3,10 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * The Size of the dog'
@@ -101,4 +104,18 @@ export namespace Dog$ {
   export const outboundSchema = Dog$outboundSchema;
   /** @deprecated use `Dog$Outbound` instead. */
   export type Outbound = Dog$Outbound;
+}
+
+export function dogToJSON(dog: Dog): string {
+  return JSON.stringify(Dog$outboundSchema.parse(dog));
+}
+
+export function dogFromJSON(
+  jsonString: string,
+): SafeParseResult<Dog, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Dog$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Dog' from JSON`,
+  );
 }

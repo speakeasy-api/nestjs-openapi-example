@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import * as yaml from 'js-yaml';
 import { writeFileSync } from 'fs';
+import { apiReference } from '@scalar/nestjs-api-reference';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,7 +25,7 @@ async function bootstrap() {
     .setTitle('Pet API')
     .setDescription('Create a cat or dog record and view pets by id')
     .setVersion('1.0')
-    .addTag('pets', 'Pets operations', {
+    .addTag('Pets', 'Pets operations', {
       url: 'https://example.com/api',
       description: 'Operations API endpoint',
     })
@@ -65,7 +66,18 @@ async function bootstrap() {
   // Save the YAML document to a file
   writeFileSync('openapi.yaml', yamlString);
 
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    swaggerUiEnabled: false,
+  });
+
+  app.use(
+    '/api',
+    apiReference({
+      spec: {
+        content: document,
+      },
+    }),
+  );
 
   app.enableCors({
     origin: 'http://localhost:5173', // Vite's default port

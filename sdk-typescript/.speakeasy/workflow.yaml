@@ -1,11 +1,18 @@
 workflowVersion: 1.0.0
+speakeasyVersion: latest
 sources:
-    sdk -OAS:
+    Pet API:
         inputs:
-            - location: ..\openapi.yaml
+            - location: ../openapi.yaml
         registry:
-            location: registry.speakeasyapi.dev/ritza-rzx/ritza/sdk--oas
+            location: registry.speakeasyapi.dev/ritza-rzx/ritza/pet-api
 targets:
     sdk:
         target: typescript
-        source: sdk -OAS
+        source: Pet API
+        codeSamples:
+            registry:
+                location: registry.speakeasyapi.dev/ritza-rzx/ritza/pet-api-typescript-code-samples
+            labelOverride:
+                fixedValue: Typescript (SDK)
+            blocking: false

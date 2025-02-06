@@ -1,26 +1,26 @@
 lockVersion: 2.0.0
 id: 08ee7812-c6f8-4551-ab80-f28acfcd5a35
 management:
-  docChecksum: 417b29511534133a6144a51d17a20a39
+  docChecksum: 31c9e6f2ae4ccd69874f976465406cb7
   docVersion: "1.0"
-  speakeasyVersion: 1.405.6
-  generationVersion: 2.428.1
-  releaseVersion: 0.0.1
-  configChecksum: 437e28a2ac1b2ada6ec33696083cb272
+  speakeasyVersion: 1.472.0
+  generationVersion: 2.493.34
+  releaseVersion: 0.1.0
+  configChecksum: f1516b56d700cc62360ed09be7025fdb
 features:
   typescript:
     additionalDependencies: 0.1.0
-    core: 3.18.1
+    core: 3.18.17
     defaultEnabledRetries: 0.1.0
     devContainers: 2.90.0
     enumUnions: 0.1.0
-    envVarSecurityUsage: 0.1.1
+    envVarSecurityUsage: 0.1.2
     globalSecurityCallbacks: 0.1.0
     globalServerURLs: 2.82.4
     responseFormat: 0.2.3
     retries: 2.83.0
-    sdkHooks: 0.1.0
-    unions: 2.85.7
+    sdkHooks: 0.2.0
+    unions: 2.85.8
 generatedFiles:
   - .devcontainer/README.md
   - .devcontainer/devcontainer.json
@@ -28,7 +28,6 @@ generatedFiles:
   - .eslintrc.cjs
   - .gitattributes
   - .npmignore
-  - CONTRIBUTING.md
   - FUNCTIONS.md
   - RUNTIMES.md
   - USAGE.md
@@ -53,6 +52,8 @@ generatedFiles:
   - src/funcs/catsFindOneCat.ts
   - src/funcs/dogsFindOneDog.ts
   - src/funcs/petsCreate.ts
+  - src/funcs/petsFindOneCat.ts
+  - src/funcs/petsFindOneDog.ts
   - src/hooks/hooks.ts
   - src/hooks/index.ts
   - src/hooks/types.ts
@@ -76,9 +77,9 @@ generatedFiles:
   - src/models/components/cat.ts
   - src/models/components/dog.ts
   - src/models/components/index.ts
+  - src/models/errors/apierror.ts
   - src/models/errors/httpclienterrors.ts
   - src/models/errors/index.ts
-  - src/models/errors/sdkerror.ts
   - src/models/errors/sdkvalidationerror.ts
   - src/models/operations/create.ts
   - src/models/operations/findonecat.ts
@@ -106,7 +107,8 @@ examples:
       responses:
         "200":
           application/json: {"type": "dog", "name": "Fluffy", "age": 4, "breed": "Alaskan Malamute", "size": "medium"}
-        "201": {}
+        "201":
+          application/json: {}
   findOneCat:
     speakeasy-default-find-one-cat:
       parameters:
@@ -123,3 +125,5 @@ examples:
       responses:
         "200":
           application/json: {"type": "dog", "name": "Fluffy", "age": 4, "breed": "Alaskan Malamute", "size": "medium"}
+examplesVersion: 1.0.0
+generatedTests: {}

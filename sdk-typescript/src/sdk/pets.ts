@@ -3,7 +3,10 @@
  */
 
 import { petsCreate } from "../funcs/petsCreate.js";
+import { petsFindOneCat } from "../funcs/petsFindOneCat.js";
+import { petsFindOneDog } from "../funcs/petsFindOneDog.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
+import * as components from "../models/components/index.js";
 import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
@@ -16,6 +19,34 @@ export class Pets extends ClientSDK {
     options?: RequestOptions,
   ): Promise<operations.CreateResponse> {
     return unwrapAsync(petsCreate(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Get cat
+   */
+  async findOneCat(
+    request: operations.FindOneCatRequest,
+    options?: RequestOptions,
+  ): Promise<components.Cat> {
+    return unwrapAsync(petsFindOneCat(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Get dog
+   */
+  async findOneDog(
+    request: operations.FindOneDogRequest,
+    options?: RequestOptions,
+  ): Promise<components.Dog> {
+    return unwrapAsync(petsFindOneDog(
       this,
       request,
       options,

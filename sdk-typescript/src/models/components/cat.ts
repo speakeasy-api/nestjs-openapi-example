@@ -3,7 +3,10 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Living environment of the cat
@@ -99,4 +102,18 @@ export namespace Cat$ {
   export const outboundSchema = Cat$outboundSchema;
   /** @deprecated use `Cat$Outbound` instead. */
   export type Outbound = Cat$Outbound;
+}
+
+export function catToJSON(cat: Cat): string {
+  return JSON.stringify(Cat$outboundSchema.parse(cat));
+}
+
+export function catFromJSON(
+  jsonString: string,
+): SafeParseResult<Cat, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Cat$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Cat' from JSON`,
+  );
 }

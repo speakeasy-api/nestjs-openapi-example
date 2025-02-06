@@ -1,5 +1,12 @@
-speakeasyVersion: 1.405.6
+speakeasyVersion: 1.472.0
 sources:
+    Pet API:
+        sourceNamespace: pet-api
+        sourceRevisionDigest: sha256:a0dbb7bff60297600eae7140b36a9f2f0dbc84600c47e9d13dc51a81e89aeac4
+        sourceBlobDigest: sha256:0acae994998e6e953969ace1149d6c7af6d3914ae228a2e74d0c2032b04cc8a7
+        tags:
+            - latest
+            - "1.0"
     sdk -OAS:
         sourceNamespace: sdk--oas
         sourceRevisionDigest: sha256:e48888f31b5ae3586606dee20741535c180e66ca9c65620f851a3051d3f91095
@@ -8,19 +15,28 @@ sources:
             - latest
 targets:
     sdk:
-        source: sdk -OAS
-        sourceNamespace: sdk--oas
-        sourceRevisionDigest: sha256:e48888f31b5ae3586606dee20741535c180e66ca9c65620f851a3051d3f91095
-        sourceBlobDigest: sha256:9de7e874e1a86c0e7c430fc89d8b427943da4b3a62c60e1e7ca7dbee0ca377cc
+        source: Pet API
+        sourceNamespace: pet-api
+        sourceRevisionDigest: sha256:a0dbb7bff60297600eae7140b36a9f2f0dbc84600c47e9d13dc51a81e89aeac4
+        sourceBlobDigest: sha256:0acae994998e6e953969ace1149d6c7af6d3914ae228a2e74d0c2032b04cc8a7
+        codeSamplesNamespace: pet-api-typescript-code-samples
+        codeSamplesRevisionDigest: sha256:56fcc0d1795783e695d035697f505aaaabca2d3a1aa44c19ea04eaf605824bab
 workflow:
     workflowVersion: 1.0.0
+    speakeasyVersion: latest
     sources:
-        sdk -OAS:
+        Pet API:
             inputs:
-                - location: ..\openapi.yaml
+                - location: ../openapi.yaml
             registry:
-                location: registry.speakeasyapi.dev/ritza-rzx/ritza/sdk--oas
+                location: registry.speakeasyapi.dev/ritza-rzx/ritza/pet-api
     targets:
         sdk:
             target: typescript
-            source: sdk -OAS
+            source: Pet API
+            codeSamples:
+                registry:
+                    location: registry.speakeasyapi.dev/ritza-rzx/ritza/pet-api-typescript-code-samples
+                labelOverride:
+                    fixedValue: Typescript (SDK)
+                blocking: false

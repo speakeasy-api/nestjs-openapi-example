@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type FindOneDogRequest = {
   id: string;
@@ -42,4 +45,22 @@ export namespace FindOneDogRequest$ {
   export const outboundSchema = FindOneDogRequest$outboundSchema;
   /** @deprecated use `FindOneDogRequest$Outbound` instead. */
   export type Outbound = FindOneDogRequest$Outbound;
+}
+
+export function findOneDogRequestToJSON(
+  findOneDogRequest: FindOneDogRequest,
+): string {
+  return JSON.stringify(
+    FindOneDogRequest$outboundSchema.parse(findOneDogRequest),
+  );
+}
+
+export function findOneDogRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<FindOneDogRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => FindOneDogRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'FindOneDogRequest' from JSON`,
+  );
 }
