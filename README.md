@@ -13,7 +13,7 @@ This project was bootstrapped with [NestJS-CLI](https://docs.nestjs.com/cli/over
 
 ## Prerequisites
 
-You need to have Node.js version >= 16 and the Nest CLI installed on your system to run this project. If you don't have these installed, you can download them from [here](https://nodejs.org/) and [here](https://github.com/nestjs/nest-cli).
+You need to have Node.js version >= 16 and the Nest CLI installed on your system to run this project. If you don't have these installed, you can download them from [here](https://nodejs.org/) and [nestjs/nest-cli](https://github.com/nestjs/nest-cli).
 
 To generate an SDK, you'll also need the Speakeasy CLI installed, or use the Speakeasy dashboard.
 
