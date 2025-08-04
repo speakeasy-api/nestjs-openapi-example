@@ -11,7 +11,7 @@
 
 </div>
 
-<hr />
+<h2>Speakeasy NestJS OpenAPI Example</h2>
 
 This example NestJS app demonstrates Speakeasy-recommended practices for generating clear OpenAPI specifications and SDKs.
 
@@ -73,4 +73,5 @@ speakeasy quickstart
 ## License
 
 This project is licensed under the terms of the Apache 2.0 license.
+
 
